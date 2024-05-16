@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Display listening TCP ports with associated program name and PID
+echo "Active Internet connections (only servers)"
+echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+netstat -tuln | awk '$1 ~ /^tcp/ && $6 == "LISTEN" {printf "%-6s %-7s %-8s %-24s %-22s %-10s", $1, $2, $3, $4, $5, ""; system("lsof -n -i :"substr($4, index($4, ":") + 1)" | tail -n 1")}'
+echo ""
+
+# Display listening UDP ports with associated program name and PID
+netstat -uln | awk '$1 ~ /^udp/ {printf "%-6s %-7s %-8s %-24s %-22s %-10s", $1, $2, $3, $4, $5, ""; system("lsof -n -i :"substr($4, index($4, ":") + 1)" | tail -n 1")}'
+echo ""
